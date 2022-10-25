@@ -1,6 +1,6 @@
 name: dogcat_single
-workspace: nanos
-project: PDS
+workspace: saurabh
+project: dogs-and-cats
 data:
     pachyderm:
       host:
