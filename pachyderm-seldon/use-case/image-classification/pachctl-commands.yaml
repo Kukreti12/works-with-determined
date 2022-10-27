@@ -1,0 +1,2 @@
+pachctl create pipeline -f 
+  pachctl put file dogs-and-cats@master:/data -f dataset/data -r 

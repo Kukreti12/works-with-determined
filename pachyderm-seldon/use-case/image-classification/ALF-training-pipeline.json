@@ -14,7 +14,7 @@
   },  
   "transform": {
     "cmd": ["/bin/sh"],
-    "stdin": ["python train.py --git-url https://git@github.com:/Kukreti12/works-with-determined --git-ref master --sub-dir pachyderm-seldon/use-case/image-classification/experiment --config const.yaml --repo dogs-and-cats --model dogs-and-cats"],
+    "stdin": ["python train.py --git-url https://git@github.com:/Kukreti12/works-with-determined --git-ref master --sub-dir pachyderm-seldon/use-case/image-classification/experiment --config const.yaml --repo dogs-and-cats --model dogs-and-cats-model"],
     "image": "10.10.160.143:9002/dog-cat/train:0.0.1",
     "secrets": [
       {
@@ -39,6 +39,6 @@
       }
     ]    
   },
-  "pod_patch": "[  {   \"op\": \"add\",   \"path\": \"/volumes/-\",   \"value\": {    \"name\": \"det-checkpoints\",    \"hostpath\": {     \"path\": \"/mnt/mapr_nfs/singledf.ailab.local/determined/det_checkpoints\",     \"type\": \"Directory\"    }   }  },  {   \"op\": \"add\",   \"path\": \"/containers/0/volumeMounts/-\",   \"value\": {    \"mountPath\": \"/determined_shared_fs\",    \"name\": \"det-checkpoints\"   }  } ]"
+  "pod_patch": "[  {   \"op\": \"add\",   \"path\": \"/volumes/-\",   \"value\": {    \"name\": \"det-checkpoints\",    \"hostpath\": {     \"path\": \"/mnt/mapr_nfs/det_checkpoints\",     \"type\": \"Directory\"    }   }  },  {   \"op\": \"add\",   \"path\": \"/containers/0/volumeMounts/-\",   \"value\": {    \"mountPath\": \"/determined_shared_fs\",    \"name\": \"det-checkpoints\"   }  } ]"
 
 }
