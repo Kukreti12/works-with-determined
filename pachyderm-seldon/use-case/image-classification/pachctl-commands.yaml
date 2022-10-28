@@ -1,2 +1,6 @@
-pachctl create pipeline -f 
-  pachctl put file dogs-and-cats@master:/data -f dataset/data -r 
+
+pachctl delete pipeline dogs-and-cats-model
+pachctl delete repo dogs-and-cats
+pachctl create repo dogs-and-cats
+pachctl create pipeline -f ALF-training-pipeline
+pachctl put file dogs-and-cats@master:/data -f dataset/data -r 
