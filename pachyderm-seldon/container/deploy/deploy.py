@@ -84,10 +84,6 @@ def create_deploy_descriptor(args, secrets, det, model):
                                         image=args.serving_image,
                                         volume_mounts=[
                                             VolumeMount(
-                                                name="config",
-                                                mount_path="/app/config"
-                                            ),
-                                            VolumeMount(
                                                 name="det-checkpoints",
                                                 mount_path="/determined_shared_fs"
                                             )
@@ -103,15 +99,9 @@ def create_deploy_descriptor(args, secrets, det, model):
                                 ],
                                 volumes=[
                                     Volume(
-                                        name="config",
-                                        secret=SecretVolumeSource(
-                                            secret_name="deployment-secret"
-                                        )
-                                    ),
-                                    Volume(
                                         name="det-checkpoints",
                                         host_path=HostPathVolumeSource(
-                                            path="/mnt/mapr_nfs/edf.ailab.local/determined/det_checkpoints"
+                                            path="/mnt/mapr_nfs/determined/det_checkpoints"
                                         )
                                     )
                                 ]
