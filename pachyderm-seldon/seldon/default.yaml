@@ -1,0 +1,183 @@
+######################### Credentials Configuration ###########################
+sd_user: seldon
+sd_email: admin@seldon.io
+sd_password: "12341234"
+
+########################### Generic Configuration #############################
+
+seldon_system_namespace: seldon-system
+seldon_logs_namespace: seldon-logs
+
+seldon_namespaces:
+  - seldon
+  - seldon-demos
+  - seldon-gitops
+
+external_protocol: https
+seldon_deploy_cluster_name: "default"
+
+seldon_cache_directory: "{{ ansible_env.HOME }}/.cache/seldon"
+
+######################## Seldon Deploy Configuration ##########################
+
+# Seldon Deploy image and version; defaults to latest stable release
+# This is used to obtain installation resources
+seldon_deploy_image: seldonio/seldon-deploy-server
+seldon_deploy_version: "{{ lookup('file', '../SD_VERSION') }}"
+
+# Set to True to use helm charts baked into the Docker Image
+seldon_deploy_install_resources_from_docker: false
+
+# Configure Postgres DB for Seldon Deploy Model Catalog
+seldon_deploy_configure_postgresql: true
+
+# Configure default OPA policies for Seldon Deploy
+seldon_deploy_configure_opa: true
+seldon_deploy_opa_config_map_name: seldon-deploy-policies
+seldon_deploy_opa_enable_project_auth: true
+seldon_deploy_opa_istio_policy_sync_interval: ""
+
+# Audit configuration
+seldon_deploy_configure_audit: true
+
+# Helm Values used for Seldon Deploy installation
+seldon_deploy_values: "{{ lookup('template', 'values-seldon-deploy.yaml.j2') | from_yaml }}"
+
+######################## Seldon Core Configuration ############################
+
+# Version of Seldon Core to be installed, default: master
+# This can be any value accepted by "git checkout": branch, tag, SHA, HEAD, etc...
+seldon_core_version: v1.13.1
+
+# Local folder of already cloned Seldon Core git repository to be used.
+# If defined then `seldon_core_version` will be ignored.
+# seldon_core_source_dir: "~/work/seldon-core"
+
+# Helm Values used for Seldon Core installation
+seldon_core_values: "{{ lookup('file', 'values-seldon-core.yaml') | from_yaml }}"
+
+#################### Seldon Core Analytics Configuration ######################
+
+# Seldon Core Analytics version: helm chart version, default: null (latest)
+seldon_core_analytics_version: v1.13.1
+seldon_core_analytics_values: "{{ lookup('file', 'values-seldon-core-analytics.yaml') | from_yaml }}"
+seldon_core_analytics_istio_external_ip_required: true
+seldon_core_analytics_extra_resources:
+  - "{{ lookup('file', 'model-usage-rules.yaml') | from_yaml }}"
+  - "{{ lookup('file', 'deploy-alerts-rules.yaml') | from_yaml }}"
+  - "{{ lookup('template', 'alertmanager.yaml.j2') | from_yaml }}"
+
+############################ Istio and Certmanager Configuration ##############################
+
+# Version of Istio to be installed
+istio_version: 1.13.1
+
+# This flag allows to skip verification of Istio installation, default: true
+# Reason: verify install does not work for Istio 1.7.x and k8s 1.18.x.
+istio_verify_install: false
+
+# This flag controls creation of Seldon Gateway, default: true
+istio_create_seldon_gateway: true
+
+# This is to control deployment of Istio Gateway with SSL
+certmanager_use_letsencrypt: false
+istio_use_ssl: "{{ external_protocol == 'https' }}"
+istio_self_signed_certs: "{{ not (certmanager_use_letsencrypt | bool ) }}"
+
+# This flag controls the creation of base authorization policies integrated with Keycloak
+istio_base_auth_policies: true
+
+########################### MinIO Configuration ###############################
+
+minio_chart_version: 8.0.10
+minio_access_key: "{{ sd_email }}"
+minio_secret_key: "{{ sd_password }}"
+
+# Type of MinIO Service; default: ClusterIP
+minio_service_type: LoadBalancer
+
+# Name of rclone-compatible secret; default: minio-bucket
+# If set to "null" then secret will not be written
+minio_rclone_secret_name: minio-bucket
+
+# Name of rclone-compatible secret; default: null
+# If set to "null" then secret will not be written
+minio_kfserving_secret_name: seldon-kfserving-secret
+
+# List of namespaces to which MinIO secret should be written
+minio_secret_namespaces: "{{ seldon_namespaces }}"
+
+########################### EFK CONFIGURATION #################################
+
+elastic_opendistro_version: v1.13.2
+fluentd_chart_version: 10.0.1
+
+elastic_opendistro_values: "{{ lookup('file', 'values-opendistro.yaml') | from_yaml }}"
+fluentd_values: "{{ lookup('file', 'values-fluentd.yaml') | from_yaml }}"
+
+
+########################### AUDIT FLUENTD  ####################################
+
+bitnami_fluentd_chart_version: 5.1.7
+bitnami_fluentd_name: "audit-fluentd"
+bitnami_fluentd_values: "{{ lookup('template', 'values-audit-fluentd.yaml.j2') | from_yaml }}"
+
+########################## KNative Configuration ##############################
+
+knative_eventing_version: knative-v1.1.0
+knative_serving_version: knative-v1.1.0
+
+knative_eventing_create_default_broker: true
+knative_eventing_default_broker_namespace: seldon-logs
+
+######################### Argo Workflows Configuration ########################
+
+argo_workflows_chart_version: 0.2.7
+
+argo_workflows_values:
+  controller:
+    containerRuntimeExecutor: k8sapi
+
+argo_workflows_rbac_namespaces: "{{ seldon_namespaces }}"
+
+######################## ArgoCD & Gitops Configuration ########################
+
+gitops_user: "{{ sd_user }}"
+gitops_email: "{{ sd_email }}"
+gitops_password: "{{ sd_password }}"
+gitops_repo_name: "seldon-gitops"
+
+gitea_values: "{{ lookup('template', 'values-gitea.yaml.j2') | from_yaml }}"
+
+gitea_host: "gitea-http.gitea-system.svc.cluster.local:3000"
+gitops_repository: "http://{{ gitea_host }}/{{ gitops_user }}/{{ gitops_repo_name }}"
+gitops_namespaces:
+  - seldon-gitops
+  - seldon-demos
+
+argocd_chart_version: 3.33.7
+argocd_values: "{{ lookup('template', 'values-argocd.yaml.j2') | from_yaml }}"
+
+######################### Keycloak Configuration ##############################
+
+keycloak_username: "{{ sd_user }}"
+keycloak_password: "{{ sd_password }}"
+keycloak_useremail: "{{ sd_email }}"
+
+keycloak_api_clientid: "sd-api"
+keycloak_api_secret: "sd-api-secret"
+
+######################### Postgres Configuration ##############################
+
+postgres_operator_namespace: postgres
+postgres_operator_version: v1.6.3
+
+
+######################## Speed Optimizations ##################################
+argo_workflows_wait_for_deployments: false
+argocd_wait_for_deployments: false
+elastic_opendistro_wait_for_deployments: false
+fluentd_wait_for_deployments: false
+kfserving_wait_for_deployments: false
+knative_serving_wait_for_deployments: false
+seldon_core_analytics_wait_for_deployments: false

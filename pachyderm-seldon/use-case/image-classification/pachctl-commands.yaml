@@ -5,11 +5,16 @@ pachctl delete repo dogs-and-cats
 pachctl create repo dogs-and-cats
 pachctl create pipeline -f ALF-training-pipeline.json
 pachctl create pipeline -f ALF-deployment-pipeline.json
-pachctl put file dogs-and-cats@master:/data -f dataset/data -r 
 
+pachctl put file dogs-and-cats@master:/data -f dataset/data -r 
+pachctl put file dogs-and-cats@master:/data -f dataset/delta -r 
 pachctl update pipeline <pipeline name> ---reprocess
 
 #Pachyderm set context
 
 echo '{"pachd_address": "grpc://10.10.160.171:30650"}' | pachctl config set context "kubernetes-admin@kubernetes" --overwrite
 pachctl config set active-context "kubernetes-admin@kubernetes"
+
+
+# check the tag version of docker "image"
+
