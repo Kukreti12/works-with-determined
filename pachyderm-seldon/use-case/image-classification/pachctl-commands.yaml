@@ -17,4 +17,5 @@ pachctl config set active-context "kubernetes-admin@kubernetes"
 
 
 # check the tag version of docker "image"
-
+docker build -t 10.10.160.143:9002/saurabh/dog-cat/train:0.0.12
+docker push 10.10.160.143:9002/saurabh/dog-cat/train:0.0.12
