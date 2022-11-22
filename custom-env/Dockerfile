@@ -1,12 +1,11 @@
 # Determined Image
-FROM determinedai/environments:py-3.8-pytorch-1.10-tf-2.8-cpu-0.19.4
+FROM determinedai/environments:cuda-11.3-pytorch-1.10-tf-2.8-gpu-0.19.4
 
-# Create a virtual environment
+# Custom Configuration
+RUN apt-get update && \
+   DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
 COPY pip_requirements.txt /tmp/pip_requirements.txt
-RUN conda create -n myenv python=3.8
+RUN conda clean --all --force-pkgs-dirs --yes
 RUN eval "$(conda shell.bash hook)" && \
-   conda activate myenv && \
-   pip install -r /tmp/pip_requirements.txt
-
-# Set the default virtual environment
-RUN echo 'eval "$(conda shell.bash hook)" && conda activate myenv' >> ~/.bashrc
+   conda activate base && \
+   pip install --requirement /tmp/pip_requirements.txt
