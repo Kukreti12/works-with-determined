@@ -21,3 +21,9 @@ docker build -t 10.10.160.143:9002/saurabh/dog-cat/train:0.0.13 .
 docker push 10.10.160.143:9002/saurabh/dog-cat/train:0.0.13
 
 docker build -t  10.10.160.143:9002/dog-cat/saurabh/serve:0.0.11 .
+
+## Docker image for determined cluster
+
+docker build -t  10.10.160.143:9002/saurabh/custom-image/det:0.0.1 . 
+
+10.10.160.143:9002/saurabh/custom-image/det:0.0.1
