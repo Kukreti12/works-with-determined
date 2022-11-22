@@ -15,7 +15,7 @@
   "transform": {
     "cmd": ["/bin/sh"],
     "stdin": ["python train.py --git-url https://git@github.com:/Kukreti12/works-with-determined --git-ref master --sub-dir pachyderm-seldon/use-case/image-classification/experiment --config const.yaml --repo dogs-and-cats --model dogs-and-cats-model"],
-    "image": "10.10.160.143:9002/saurabh/dog-cat/train:0.0.12",
+    "image": "10.10.160.143:9002/saurabh/dog-cat/train:0.0.13",
     "secrets": [
       {
         "name": "pipeline-secret",
