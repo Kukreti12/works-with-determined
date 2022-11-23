@@ -14,8 +14,8 @@
   },  
   "transform": {
     "cmd": ["/bin/sh"],
-    "stdin": ["python train.py --git-url https://git@github.com:/JordanNanos/works-with-determined.git --git-ref master --sub-dir pachyderm-seldon/use-case/brain-mri/experiment --config const.yaml --repo brain-mri-new --model brain-mri"],
-    "image": "10.10.160.143:9002/brain-mri/train:0.0.2",
+    "stdin": ["python train.py --git-url  https://git@github.com:/Kukreti12/works-with-determined --git-ref master --sub-dir pachyderm-seldon/use-case/brain-mri/experiment --config const.yaml --repo brain-mri-new --model brain-mri"],
+    "image": "10.10.160.143:9002/saurabh/brain-mri/train:0.0.11",
     "secrets": [
       {
         "name": "pipeline-secret",
@@ -39,15 +39,8 @@
       }
     ]    
   },
-  "pod_patch": "[  {   \"op\": \"add\",   \"path\": \"/volumes/-\",   \"value\": {    \"name\": \"det-checkpoints\",    \"hostpath\": {     \"path\": \"/mnt/mapr_nfs/edf.ailab.local/determined/det_checkpoints\",     \"type\": \"Directory\"    }   }  },  {   \"op\": \"add\",   \"path\": \"/containers/0/volumeMounts/-\",   \"value\": {    \"mountPath\": \"/determined_shared_fs\",    \"name\": \"det-checkpoints\"   }  } ]"
+  "pod_patch": "[  {   \"op\": \"add\",   \"path\": \"/volumes/-\",   \"value\": {    \"name\": \"det-checkpoints\",    \"hostpath\": {     \"path\": \"/mnt/mapr_nfs/determined/det_checkpoints\",     \"type\": \"Directory\"    }   }  },  {   \"op\": \"add\",   \"path\": \"/containers/0/volumeMounts/-\",   \"value\": {    \"mountPath\": \"/determined_shared_fs\",    \"name\": \"det-checkpoints\"   }  } ]"
 
 }
 
-
-# kubectl delete deploy -n seldon seldon-sd-dogcat-deploy-drift-dogcat-deploy-00001-deployment
-# kubectl delete deploy -n seldon seldon-sd-dogcat-deploy-outlier-dogcat-deploy-00001-deployment
-# kubectl get all -n seldon
-# kubectl get sdep -n seldon
-
-# kubectl delete po -n seldon seldon-sd-dogcat-deploy-drift-dogcat-deploy-00001-deploymek2qzg
 

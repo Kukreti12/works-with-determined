@@ -27,3 +27,16 @@ docker build -t  10.10.160.143:9002/dog-cat/saurabh/serve:0.0.11 .
 docker build -t  10.10.160.143:9002/saurabh/custom-image/det:0.0.1 . 
 
 10.10.160.143:9002/saurabh/custom-image/det:0.0.1
+
+## brain-mri command
+pachctl delete pipeline brain-mri-deploy
+pachctl delete pipeline brain-mri-train
+pachctl delete repo brain-mri-new
+pachctl create repo brain-mri-new
+pachctl create pipeline -f ALF-training-pipeline.json
+pachctl create pipeline -f ALF-deployment-pipeline.json
+
+
+pachctl put file brain-mri-new@master:/data -f dataset/split/ss -r 
+
+docker build -t 10.10.160.143:9002/saurabh/brain-mri/train:0.0.11 .
