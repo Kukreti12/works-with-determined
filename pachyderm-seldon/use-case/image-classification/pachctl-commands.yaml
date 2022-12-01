@@ -44,3 +44,5 @@ docker build -t 10.10.160.143:9002/saurabh/brain-mri/train:0.0.11 .
 
 docker build -t 10.10.160.143:9002/saurabh/brain-mri/deploy:0.0.11 .
 docker push 10.10.160.143:9002/saurabh/brain-mri/deploy:0.0.11
+
+pachctl put file brain-mri-new@master:/data -f dataset/split/ss_split -r
